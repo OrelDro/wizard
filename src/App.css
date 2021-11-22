@@ -1,4 +1,23 @@
 .App {
+  display: block;
   text-align: center;
+}
+
+.app-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.main {
+  padding-top: 100px;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.main .wizard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
