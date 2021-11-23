@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 import './App.css';
-import {ISection, IStep, IWizard} from "./common/wizard.interface";
+import {IWizard} from "./common/wizard.interface";
 import Section from "./components/section/section";
+import Input from "./components/input/input";
+import Select from "./components/select/select";
 
 const wizard: IWizard = {
   name: "My wizard",
@@ -28,48 +30,60 @@ const wizard: IWizard = {
   ]
 }
 
-export enum SelectedType {
-  Section = 1,
-  Step = 2
+enum QuestionType {
+  String = "string",
+  Number = "number",
+  Multi = "multi"
 }
 function App() {
 
-  const [selectedStep, setSelectedStep] = useState<IStep | null>(null);
+  const [selectedSectionIdx, setSelectedSectionIdx] = useState<number>(-1);
+  const [selectedStepIdx, setSelectedStepIdx] = useState<number>(-1);
 
-  const updateSelected = (selected: ISection | IStep, type: number) => {
-    if (type === SelectedType.Section) {
-      const selectedSection = selected as ISection;
-      setSelectedStep(selectedSection.steps[0]);
-    } else if (type === SelectedType.Step) {
-      const selectedStep = selected as IStep;
-      setSelectedStep(selectedStep);
-    }
+  const updateSelected = (sectionIndex: number, stepIndex: number) => {
+    setSelectedSectionIdx(sectionIndex);
+    setSelectedStepIdx(stepIndex);
   };
 
-  return (
-    <div className="App">
-      <span className="app-title">Wizard App</span>
-      <div className="main">
-        <div className="wizard">
-          {wizard.sections.map( (section, index,sections) => (
-              <Section key={index} section={section} index={index} sectionsLength={sections.length} updateSelected={updateSelected}/>
-          ))}
-        </div>
-        <div>
-          { (selectedStep?.type === "string" || selectedStep?.type === "number") && <>
-            <label htmlFor={selectedStep.name}>{selectedStep?.question}</label>
-            <input id={selectedStep.name} type={selectedStep?.type}/>
-          </>}
-          {selectedStep?.type === "multi" && <>
-            <label htmlFor={selectedStep.name}>{selectedStep?.question}</label>
-            <select id={selectedStep.name}>
-              {selectedStep?.values?.length && selectedStep?.values.map( (val) => (<option key={val} value={val}>{val}</option>))}
-            </select>
-          </>}
+  const clickNextButton = () => {
+    if (selectedSectionIdx === -1 && selectedStepIdx === -1) {
+      updateSelected(0, 0);
+    } else if (selectedStepIdx < wizard.sections[selectedSectionIdx].steps.length - 1) {
+      updateSelected(selectedSectionIdx, selectedStepIdx + 1);
+    } else if (selectedSectionIdx < wizard.sections.length - 1 && wizard.sections[selectedSectionIdx + 1].steps.length) {
+      updateSelected(selectedSectionIdx + 1, 0);
+    }
+  }
 
+  return (
+      <div className="App">
+        <span className="app-title">Wizard App</span>
+        <div className="main">
+          <div className="wizard">
+            {wizard.sections.map( (section, index,sections) => (
+                <Section key={index} section={section} index={index} sectionsLength={sections.length} updateSelected={updateSelected}/>
+            ))}
+          </div>
+          {selectedSectionIdx >= 0 && selectedStepIdx >= 0 &&
+          <div>
+            {(wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.type === QuestionType.String ||
+                wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.type === QuestionType.Number) &&
+              <Input name={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.name}
+                     question={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.question}
+                     type={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.type}/>
+            }
+            {wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.type === QuestionType.Multi &&
+            <Select name={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.name}
+                    question={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.question}
+                    values={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.values}/>
+            }
+          </div>
+          }
+          {wizard.sections.length && <div>
+            <input type="button" value="next" onClick={() => clickNextButton()}/>
+          </div>}
         </div>
       </div>
-    </div>
   );
 }
 
