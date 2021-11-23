@@ -10,7 +10,7 @@ interface IInputProps {
 function Input({name, type, question}: IInputProps) {
 
     return (
-        <div>
+        <div className="input-wrapper">
             <label htmlFor={name}>{question}</label>
             <input id={name} type={type}/>
         </div>

@@ -61,27 +61,24 @@ function App() {
         <div className="main">
           <div className="wizard">
             {wizard.sections.map( (section, index,sections) => (
-                <Section key={index} section={section} index={index} sectionsLength={sections.length} updateSelected={updateSelected}/>
+                <Section key={index} section={section} index={index} sectionsLength={sections.length}
+                         selectedSectionIdx={selectedSectionIdx} selectedStepIdx={selectedStepIdx} updateSelected={updateSelected}/>
             ))}
           </div>
-          {selectedSectionIdx >= 0 && selectedStepIdx >= 0 &&
-          <div>
+          {selectedSectionIdx >= 0 && selectedStepIdx >= 0 && <>
             {(wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.type === QuestionType.String ||
                 wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.type === QuestionType.Number) &&
-              <Input name={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.name}
-                     question={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.question}
-                     type={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.type}/>
+            <Input name={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.name}
+                   question={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.question}
+                   type={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.type}/>
             }
             {wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.type === QuestionType.Multi &&
             <Select name={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.name}
                     question={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.question}
                     values={wizard.sections[selectedSectionIdx].steps[selectedStepIdx]?.values}/>
             }
-          </div>
-          }
-          {wizard.sections.length && <div>
-            <input type="button" value="next" onClick={() => clickNextButton()}/>
-          </div>}
+          </>}
+          {wizard.sections.length && <input type="button" value="Next" onClick={() => clickNextButton()}/>}
         </div>
       </div>
   );

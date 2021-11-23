@@ -1,6 +1,7 @@
 .App {
   display: block;
   text-align: center;
+  padding: 30px;
 }
 
 .app-title {
@@ -14,6 +15,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 20px;
 }
 
 .main .wizard {
@@ -21,3 +23,17 @@
   justify-content: center;
   align-items: center;
 }
+
+.main input[type="button"] {
+  font-size: 18px;
+  outline: none;
+  border-radius: 30px;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.main input[type="button"]:hover {
+  background-color: cadetblue;
+}
+

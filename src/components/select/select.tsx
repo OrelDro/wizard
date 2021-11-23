@@ -10,9 +10,10 @@ interface ISelectProps {
 function Select({name, question, values}: ISelectProps) {
 
     return (
-        <div>
+        <div className="select-wrapper">
             <label htmlFor={name}>{question}</label>
             <select id={name}>
+                <option value=""/>
                 {values?.length && values?.map( (val) => (<option key={val} value={val}>{val}</option>))}
             </select>
         </div>
